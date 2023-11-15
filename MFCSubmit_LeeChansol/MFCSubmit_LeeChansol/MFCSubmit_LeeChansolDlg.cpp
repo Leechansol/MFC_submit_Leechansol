@@ -166,12 +166,10 @@ HCURSOR CMFCSubmitLeeChansolDlg::OnQueryDragIcon()
 }
 
 
-
 void CMFCSubmitLeeChansolDlg::OnBnClickedBtnDraw()
 {
 	// edit control에서 가로세로 길이 받아오기
-	m_pDlgImage->m_widthlength = GetDlgItemInt(IDC_CIRCLE1);
-	m_pDlgImage->m_heightlength = GetDlgItemInt(IDC_CIRCLE2);
+	int radius = GetDlgItemInt(IDC_RADIUS);
 
 	unsigned char* fm = (unsigned char*)m_pDlgImage->m_image.GetBits();
 	int nWidth = m_pDlgImage->m_image.GetWidth();
@@ -180,15 +178,16 @@ void CMFCSubmitLeeChansolDlg::OnBnClickedBtnDraw()
 
 	memset(fm, 220, nWidth * nHeight);
 
-	// 랜덤 좌표
-	int x = rand() % nWidth;
-	int y = rand() % nHeight;
-	//fm[y * nPitch + x] = 0;
+	// 랜덤 좌표, 밖으로 벗어나지 않게
+	int x = rand() % (nWidth - radius*2);
+	int y = rand() % (nHeight - radius*2);
 
 	m_pDlgImage->m_pos[0].x = x;
 	m_pDlgImage->m_pos[0].y = y;
-	cout << m_pDlgImage->m_pos[0].x << endl;
-	cout << m_pDlgImage->m_pos[0].y << endl;
+
+	//원 그리기
+	drawCircle(fm, x, y, radius);
+
 	m_pDlgImage->Invalidate();
 }
 
@@ -198,4 +197,32 @@ void CMFCSubmitLeeChansolDlg::OnDestroy()
 	CDialogEx::OnDestroy();
 
 	if(m_pDlgImage)	delete m_pDlgImage;
+}
+
+void CMFCSubmitLeeChansolDlg::drawCircle(unsigned char* fm, int x, int y, int nRadius)
+{
+	int nCenterX = x + nRadius;
+	int nCenterY = y + nRadius;
+	int nPitch = m_pDlgImage->m_image.GetPitch();
+
+	for (int j = y; j < y + nRadius * 2 ; j++) {
+		for (int i = x; i < x + nRadius * 2 ; i++) {
+			if (isCircle(i, j, nCenterX, nCenterY, nRadius))
+				fm[j * nPitch + i] = 0;
+		}
+	}
+}
+
+bool CMFCSubmitLeeChansolDlg::isCircle(int i, int j, int nCenterX, int nCenterY, int nRadius)
+{
+	bool flg = false;
+	double dx = i - nCenterX;
+	double dy = j - nCenterY;
+	double dDist = dx * dx + dy * dy;
+
+	//원 내부 판별
+	if (dDist < nRadius * nRadius)
+		flg = true;
+
+	return flg;
 }

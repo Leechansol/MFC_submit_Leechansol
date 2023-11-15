@@ -13,7 +13,6 @@ public:
 	CMFCSubmitLeeChansolDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
 
 	CDlgImage* m_pDlgImage;
-	CEdit m_Edit;
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -37,4 +36,6 @@ protected:
 public:
 	afx_msg void OnBnClickedBtnDraw();
 	afx_msg void OnDestroy();
+	void drawCircle(unsigned char* fm, int x, int y, int nRadius);
+	bool isCircle(int i, int j, int nCenterX, int nCenterY, int nRadius);
 };

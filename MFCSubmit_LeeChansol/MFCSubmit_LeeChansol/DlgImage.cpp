@@ -82,15 +82,16 @@ void CDlgImage::OnPaint()
 
 void CDlgImage::drawData(CDC* pDC)
 {
-	drawCircle(pDC, COLOR_BLUE, 0); // original circle
-	drawCenter(pDC);
-	drawCircle(pDC, COLOR_YELLOW, 2); // out circle
+	//drawCircle(pDC, COLOR_BLUE, 0); // original circle
+	//drawCenter(pDC);
+	//drawOutCircle(pDC, COLOR_YELLOW, 2); // out circle
 	
 }
 
 // 원그리기
-void CDlgImage::drawCircle(CDC* pDC, COLORREF color, int n)
+void CDlgImage::drawOutCircle(CDC* pDC, COLORREF color, int n)
 {
+	/*
 	CRect rect;
 	CPen pen;
 	CBrush brush;
@@ -108,11 +109,13 @@ void CDlgImage::drawCircle(CDC* pDC, COLORREF color, int n)
 
 	pen.DeleteObject();
 	brush.DeleteObject();
+	*/
 }
 
 // 십자그리기
 void CDlgImage::drawCenter(CDC* pDC)
 {
+	/*
 	CPen pen;
 	pen.CreatePen(PS_SOLID, 2, COLOR_BLUE);
 	CPen* pOldPen = pDC->SelectObject(&pen);
@@ -125,4 +128,5 @@ void CDlgImage::drawCenter(CDC* pDC)
 
 	pDC->SelectObject(pOldPen);
 	pen.DeleteObject();
+	*/
 }
