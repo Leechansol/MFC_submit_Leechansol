@@ -71,6 +71,7 @@ BEGIN_MESSAGE_MAP(CMFCSubmitLeeChansolDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BTN_DRAW, &CMFCSubmitLeeChansolDlg::OnBnClickedBtnDraw)
 	ON_WM_DESTROY()
+	ON_BN_CLICKED(IDC_BTN_CENTER, &CMFCSubmitLeeChansolDlg::OnBnClickedBtnCenter)
 END_MESSAGE_MAP()
 
 
@@ -168,8 +169,9 @@ HCURSOR CMFCSubmitLeeChansolDlg::OnQueryDragIcon()
 
 void CMFCSubmitLeeChansolDlg::OnBnClickedBtnDraw()
 {
-	// edit control에서 가로세로 길이 받아오기
+	// 반지름 길이 받아오기
 	int radius = GetDlgItemInt(IDC_RADIUS);
+	m_pDlgImage->radius = radius;
 
 	unsigned char* fm = (unsigned char*)m_pDlgImage->m_image.GetBits();
 	int nWidth = m_pDlgImage->m_image.GetWidth();
@@ -225,4 +227,34 @@ bool CMFCSubmitLeeChansolDlg::isCircle(int i, int j, int nCenterX, int nCenterY,
 		flg = true;
 
 	return flg;
+}
+
+void CMFCSubmitLeeChansolDlg::OnBnClickedBtnCenter()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+}
+
+void CMFCSubmitLeeChansolDlg::findCenter()
+{
+	unsigned char* fm = (unsigned char*)m_image.GetBits();
+	int nWidth = m_image.GetWidth();
+	int nHeight = m_image.GetHeight();
+	int nPitch = m_image.GetPitch();
+
+	int sumX = 0;
+	int sumY = 0;
+	int cnt = 0;
+	CRect rect(0, 0, nWidth, nHeight);
+	for (int j = rect.top; j < rect.bottom; j++) {
+		for (int i = rect.left; i < rect.right; i++) {
+			if (fm[j * nPitch + i] == 0) {
+				sumX += i;
+				sumY += j;
+				cnt++;
+			}
+		}
+	}
+	double centerX = (double)sumX / cnt;
+	double centerY = (double)sumY / cnt;
 }

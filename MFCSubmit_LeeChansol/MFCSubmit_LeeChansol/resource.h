@@ -9,9 +9,10 @@
 #define IDD_DLGIMAGE                    103
 #define IDR_MAINFRAME                   128
 #define IDC_BTN_DRAW                    1000
-#define IDC_CIRCLE1                     1001
 #define IDC_BTN_CENTER                  1002
 #define IDC_RADIUS                      1003
+#define IDC_BTN_CENTER2                 1004
+#define IDC_BTN_OUTCIRCLE               1004
 
 // Next default values for new objects
 // 

@@ -76,40 +76,67 @@ void CDlgImage::OnPaint()
 	if (m_image) {
 		m_image.Draw(dc, 0, 0);
 	}
-
+	findCenter();
 	drawData(&dc);
 }
 
 void CDlgImage::drawData(CDC* pDC)
 {
-	//drawCircle(pDC, COLOR_BLUE, 0); // original circle
+	//drawCircle(pDC, COLOR_BLUE); // original circle
 	//drawCenter(pDC);
-	//drawOutCircle(pDC, COLOR_YELLOW, 2); // out circle
+	drawOutCircle(pDC, COLOR_YELLOW, 2); // out circle
 	
 }
 
-// 원그리기
-void CDlgImage::drawOutCircle(CDC* pDC, COLORREF color, int n)
+void CDlgImage::findCenter()
 {
-	/*
-	CRect rect;
+	int x = m_pos[0].x;
+	int y = m_pos[0].y;
+	unsigned char* fm = (unsigned char*)m_image.GetBits();
+	int nWidth = m_image.GetWidth();
+	int nHeight = m_image.GetHeight();
+	int nPitch = m_image.GetPitch();
+
+	int sumX = 0;
+	int sumY = 0;
+	int cnt = 0;
+	CRect rect(0, 0, nWidth, nHeight);
+	for (int j = rect.top; j < rect.bottom; j++) {
+		for (int i = rect.left; i < rect.right; i++) {
+			if (fm[j * nPitch + i] == 0) {
+				sumX += i;
+				sumY += j;
+				cnt++;
+			}
+		}
+	}
+	double centerX = (double)sumX / cnt;
+	double centerY = (double)sumY / cnt;
+
+}
+
+// 원그리기
+void CDlgImage::drawOutCircle(CDC* pDC, COLORREF color, int thick)
+{
+	int x = m_pos[0].x;
+	int y = m_pos[0].y;
+	
 	CPen pen;
 	CBrush brush;
-
-	pen.CreatePen(PS_SOLID, 2, color); //펜모양, 굵기, 색깔
+	
+	pen.CreatePen(PS_SOLID, thick, color); //펜모양, 굵기, 색깔
 	CPen* pOldPen = pDC->SelectObject(&pen);
 	brush.CreateStockObject(NULL_BRUSH);
 	CBrush* pOldBrush = pDC->SelectObject(&brush);
 
-	rect.SetRect(m_pos[0], m_pos[0]); // 점찍기
-	rect.InflateRect(m_widthlength+n, m_heightlength+n); // 굵기만큼 +
+	CRect rect(x-thick/2, y-thick/2, x + radius * 2 + thick/2, y + radius * 2 + thick/2);
 	pDC->Ellipse(rect); // 원그리기
 	pDC->SelectObject(pOldPen);
 	pDC->SelectObject(pOldBrush);
 
 	pen.DeleteObject();
 	brush.DeleteObject();
-	*/
+	
 }
 
 // 십자그리기

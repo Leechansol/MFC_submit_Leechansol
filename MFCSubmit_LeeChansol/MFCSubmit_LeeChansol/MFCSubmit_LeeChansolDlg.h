@@ -11,7 +11,7 @@ class CMFCSubmitLeeChansolDlg : public CDialogEx
 // 생성입니다.
 public:
 	CMFCSubmitLeeChansolDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
-
+	CImage m_image;
 	CDlgImage* m_pDlgImage;
 
 // 대화 상자 데이터입니다.
@@ -38,4 +38,6 @@ public:
 	afx_msg void OnDestroy();
 	void drawCircle(unsigned char* fm, int x, int y, int nRadius);
 	bool isCircle(int i, int j, int nCenterX, int nCenterY, int nRadius);
+	afx_msg void OnBnClickedBtnCenter();
+	void findCenter();
 };
