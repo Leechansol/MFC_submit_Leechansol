@@ -12,3 +12,8 @@ void OnBnClickedBtnOutcircle() : OutCircle 버튼
 void OnPaint() : OutCircle 버튼 클릭시 drawOutCircle 호출  
 void drawOutCircle(CDC* pDC, COLORREF color, int thick) : pen으로 원 그리기  
 
+![1](https://github.com/Leechansol/MFC_submit_Leechansol/assets/18729932/bf599764-50b1-47ef-ba4a-12334a4b7cb4)
+
+![2](https://github.com/Leechansol/MFC_submit_Leechansol/assets/18729932/77efc5bd-b6ed-409c-9fe3-97c9e324f387)
+
+![3](https://github.com/Leechansol/MFC_submit_Leechansol/assets/18729932/750a5fd7-d88c-4fd0-9f13-a91bf003b19d)
