@@ -66,7 +66,6 @@ void CDlgImage::InitImage()
 	int nPitch = m_image.GetPitch();
 	unsigned char* fm = (unsigned char*)m_image.GetBits();
 
-
 	memset(fm, 220, nWidth * nHeight);
 }
 
@@ -76,23 +75,19 @@ void CDlgImage::OnPaint()
 	if (m_image) {
 		m_image.Draw(dc, 0, 0);
 	}
-	//drawData(&dc);
-}
-/*
-void CDlgImage::drawData(CDC* pDC)
-{
-	//drawCircle(pDC, COLOR_BLUE); // original circle
-	//drawCenter(pDC);
-	drawOutCircle(pDC, COLOR_YELLOW, 2); // out circle
-	
+
+	if (flg == true) // OutCircle 버튼 클릭 시
+		drawOutCircle(&dc, COLOR_YELLOW, 1);
 }
 
-// 원그리기
+void CDlgImage::drawData(CDC* pDC)
+{
+	drawOutCircle(pDC, COLOR_YELLOW, 1); // out circle
+}
+
+// pen으로 원그리기
 void CDlgImage::drawOutCircle(CDC* pDC, COLORREF color, int thick)
 {
-	int x = m_pos[0].x;
-	int y = m_pos[0].y;
-	
 	CPen pen;
 	CBrush brush;
 	
@@ -101,31 +96,14 @@ void CDlgImage::drawOutCircle(CDC* pDC, COLORREF color, int thick)
 	brush.CreateStockObject(NULL_BRUSH);
 	CBrush* pOldBrush = pDC->SelectObject(&brush);
 
-	CRect rect(x-thick/2, y-thick/2, x + radius * 2 + thick/2, y + radius * 2 + thick/2);
+	CRect rect(m_pos[0].x, m_pos[0].y, m_pos[0].x+circle_size*2+1, m_pos[0].y + circle_size*2+1);
 	pDC->Ellipse(rect); // 원그리기
+	
 	pDC->SelectObject(pOldPen);
 	pDC->SelectObject(pOldBrush);
 
 	pen.DeleteObject();
 	brush.DeleteObject();
 	
+	flg = false;
 }
-
-// 십자그리기
-void CDlgImage::drawCenter(CDC* pDC)
-{
-	CPen pen;
-	pen.CreatePen(PS_SOLID, 2, COLOR_BLUE);
-	CPen* pOldPen = pDC->SelectObject(&pen);
-
-	pDC->MoveTo(m_pos[0].x - 3, m_pos[0].y); // 시작 좌표
-	pDC->LineTo(m_pos[0].x + 3, m_pos[0].y); // 끝 좌표
-
-	pDC->MoveTo(m_pos[0].x, m_pos[0].y - 3); // 시작 좌표
-	pDC->LineTo(m_pos[0].x, m_pos[0].y + 3); // 끝 좌표
-
-	pDC->SelectObject(pOldPen);
-	pen.DeleteObject();
-	
-}
-*/

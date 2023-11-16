@@ -16,6 +16,7 @@ public:
 	CImage m_image;
 	CDlgImage* m_pDlgImage;
 	CPoint m_pos[MAX_POINT];
+	int nRadius;
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -39,8 +40,9 @@ protected:
 public:
 	afx_msg void OnBnClickedBtnDraw();
 	afx_msg void OnDestroy();
-	void drawCircle(unsigned char* fm, int x, int y, int nRadius);
+	void drawCircle(unsigned char* fm, int x, int y, int nRadius, COLORREF color);
 	bool isCircle(int i, int j, int nCenterX, int nCenterY, int nRadius);
 	afx_msg void OnBnClickedBtnCenter();
 	CPoint findCenter();
+	afx_msg void OnBnClickedBtnOutcircle();
 };

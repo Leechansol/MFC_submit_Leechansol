@@ -11,7 +11,6 @@
 #define IDC_BTN_DRAW                    1000
 #define IDC_BTN_CENTER                  1002
 #define IDC_RADIUS                      1003
-#define IDC_BTN_CENTER2                 1004
 #define IDC_BTN_OUTCIRCLE               1004
 
 // Next default values for new objects

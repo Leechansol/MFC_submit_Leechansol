@@ -17,7 +17,9 @@ public:
 	CImage m_image;
 	CWnd* m_pParent; // 부모 변수 저장
 	CPoint m_pos[MAX_POINT];
-	int radius;
+	CPoint m_center[MAX_POINT];
+	int flg = 0;
+	int circle_size = 0;
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -31,9 +33,9 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
+	void drawOutCircle(CDC* pDC, COLORREF color, int thick);
 private:
-	//void drawData(CDC* pDC);
-	//void drawOutCircle(CDC* pDC, COLORREF color, int thick);
+	void drawData(CDC* pDC);
 	//void drawCenter(CDC* pDC);
 	void InitImage();
 };

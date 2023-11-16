@@ -8,6 +8,7 @@
 #include "MFCSubmit_LeeChansolDlg.h"
 #include "afxdialogex.h"
 #define COLOR_YELLOW RGB(0xff, 0xff, 0)
+#define COLOR_BLACK RGB(0, 0, 0)
 
 #include <iostream>
 using namespace std;
@@ -73,6 +74,7 @@ BEGIN_MESSAGE_MAP(CMFCSubmitLeeChansolDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_DRAW, &CMFCSubmitLeeChansolDlg::OnBnClickedBtnDraw)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BTN_CENTER, &CMFCSubmitLeeChansolDlg::OnBnClickedBtnCenter)
+	ON_BN_CLICKED(IDC_BTN_OUTCIRCLE, &CMFCSubmitLeeChansolDlg::OnBnClickedBtnOutcircle)
 END_MESSAGE_MAP()
 
 
@@ -114,6 +116,8 @@ BOOL CMFCSubmitLeeChansolDlg::OnInitDialog()
 	m_pDlgImage = new CDlgImage;
 	m_pDlgImage->Create(IDD_DLGIMAGE, this);
 	m_pDlgImage->ShowWindow(SW_SHOW);
+
+	m_pDlgImage->flg = false;
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -172,7 +176,8 @@ void CMFCSubmitLeeChansolDlg::OnBnClickedBtnDraw()
 {
 	// 반지름 길이 받아오기
 	int radius = GetDlgItemInt(IDC_RADIUS);
-	m_pDlgImage->radius = radius;
+	//m_pDlgImage->radius = radius;
+	nRadius = radius;
 
 	unsigned char* fm = (unsigned char*)m_pDlgImage->m_image.GetBits();
 	int nWidth = m_pDlgImage->m_image.GetWidth();
@@ -185,11 +190,14 @@ void CMFCSubmitLeeChansolDlg::OnBnClickedBtnDraw()
 	int x = rand() % (nWidth - radius*2);
 	int y = rand() % (nHeight - radius*2);
 
+	m_pDlgImage->m_pos[0].x = x;
+	m_pDlgImage->m_pos[0].y = y;
+
 	m_pos[0].x = x;
 	m_pos[0].y = y;
 
 	//원 그리기
-	drawCircle(fm, x, y, radius);
+	drawCircle(fm, x, y, radius, COLOR_YELLOW);
 
 	m_pDlgImage->Invalidate();
 }
@@ -203,16 +211,16 @@ void CMFCSubmitLeeChansolDlg::OnDestroy()
 }
 
 //좌표 받아서 기본 원 그리기
-void CMFCSubmitLeeChansolDlg::drawCircle(unsigned char* fm, int x, int y, int nRadius)
+void CMFCSubmitLeeChansolDlg::drawCircle(unsigned char* fm, int x, int y, int nRadius, COLORREF color)
 {
 	int nCenterX = x + nRadius;
 	int nCenterY = y + nRadius;
 	int nPitch = m_pDlgImage->m_image.GetPitch();
 
-	for (int j = y; j < y + nRadius * 2 ; j++) {
-		for (int i = x; i < x + nRadius * 2 ; i++) {
+	for (int j = y; j < y + nRadius * 2 + 1 ; j++) {
+		for (int i = x; i < x + nRadius * 2 + 1 ; i++) {
 			if (isCircle(i, j, nCenterX, nCenterY, nRadius))
-				fm[j * nPitch + i] = 0;
+				fm[j * nPitch + i] = COLOR_BLACK;
 		}
 	}
 }
@@ -226,7 +234,7 @@ bool CMFCSubmitLeeChansolDlg::isCircle(int i, int j, int nCenterX, int nCenterY,
 	double dDist = dx * dx + dy * dy;
 
 	//원 내부 판별
-	if (dDist < nRadius * nRadius)
+	if (dDist <= nRadius * nRadius)
 		flg = true;
 
 	return flg;
@@ -235,10 +243,11 @@ bool CMFCSubmitLeeChansolDlg::isCircle(int i, int j, int nCenterX, int nCenterY,
 //중심에 십자 그리기
 void CMFCSubmitLeeChansolDlg::OnBnClickedBtnCenter()
 {
-	int len = 5;
+	int len = nRadius/5; // 십자 길이
 	unsigned char* fm = (unsigned char*)m_pDlgImage->m_image.GetBits();
 	int nPitch = m_pDlgImage->m_image.GetPitch();
 	CPoint pt = findCenter();
+
 	cout << pt.x << "," << pt.y << endl;
 	for (int j = pt.y - len; j < pt.y + len+1; j++) {
 		fm[j * nPitch + pt.x] = 0xff;
@@ -258,9 +267,17 @@ CPoint CMFCSubmitLeeChansolDlg::findCenter()
 	int nHeight = m_pDlgImage->m_image.GetHeight();
 	int nPitch = m_pDlgImage->m_image.GetPitch();
 
+	// 중심좌표를 위한 변수
 	int sumX = 0;
 	int sumY = 0;
 	int cnt = 0;
+
+	//반지름 계산을 위한 변수
+	int x_min = INT_MAX;
+	int x_max = INT_MIN;
+	int y_min = INT_MAX;
+	int y_max = INT_MIN;
+
 	CRect rect(0, 0, nWidth, nHeight);
 	for (int j = rect.top; j < rect.bottom; j++) {
 		for (int i = rect.left; i < rect.right; i++) {
@@ -268,41 +285,29 @@ CPoint CMFCSubmitLeeChansolDlg::findCenter()
 				sumX += i;
 				sumY += j;
 				cnt++;
+
+				x_min = min(x_min, i);
+				x_max = max(x_max, i);
+				y_min = min(y_min, j);
+				y_max = max(y_max, j);
 			}
 		}
 	}
+
 	double centerX = (double)sumX / cnt;
 	double centerY = (double)sumY / cnt;
 
+	m_pDlgImage->circle_size = (((x_max - x_min) / 2) + ((y_max - y_min) / 2)) / 2; // 반지름 계산
+
 	pt.x = centerX;
 	pt.y = centerY;
-
+	m_pDlgImage->m_center[0].x = centerX;
+	m_pDlgImage->m_center[0].y = centerY;
 	return pt;
 }
-
-/*
-// 원그리기
-void CMFCSubmitLeeChansolDlg::drawOutCircle(CDC* pDC, COLORREF color, int thick)
+void CMFCSubmitLeeChansolDlg::OnBnClickedBtnOutcircle()
 {
-	int x = m_pos[0].x;
-	int y = m_pos[0].y;
-
-	CPen pen;
-	CBrush brush;
-
-	pen.CreatePen(PS_SOLID, thick, color); //펜모양, 굵기, 색깔
-	CPen* pOldPen = pDC->SelectObject(&pen);
-	brush.CreateStockObject(NULL_BRUSH);
-	CBrush* pOldBrush = pDC->SelectObject(&brush);
-
-	CRect rect(x - thick / 2, y - thick / 2, x + radius * 2 + thick / 2, y + radius * 2 + thick / 2);
-	pDC->Ellipse(rect); // 원그리기
-	pDC->SelectObject(pOldPen);
-	pDC->SelectObject(pOldBrush);
-
-	pen.DeleteObject();
-	brush.DeleteObject();
-
+	m_pDlgImage->flg = true;
+	m_pDlgImage->Invalidate();
 }
 
-*/
