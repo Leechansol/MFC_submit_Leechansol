@@ -77,12 +77,7 @@ void CDlgImage::OnPaint()
 	}
 
 	if (flg == true) // OutCircle 버튼 클릭 시
-		drawOutCircle(&dc, COLOR_YELLOW, 1);
-}
-
-void CDlgImage::drawData(CDC* pDC)
-{
-	drawOutCircle(pDC, COLOR_YELLOW, 1); // out circle
+		drawOutCircle(&dc, COLOR_YELLOW, 2);
 }
 
 // pen으로 원그리기
@@ -98,7 +93,6 @@ void CDlgImage::drawOutCircle(CDC* pDC, COLORREF color, int thick)
 
 	CRect rect(m_pos[0].x, m_pos[0].y, m_pos[0].x+circle_size*2+1, m_pos[0].y + circle_size*2+1);
 	pDC->Ellipse(rect); // 원그리기
-	
 	pDC->SelectObject(pOldPen);
 	pDC->SelectObject(pOldBrush);
 

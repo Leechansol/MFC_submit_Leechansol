@@ -15,7 +15,7 @@ using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 #endif
 
 
@@ -117,7 +117,7 @@ BOOL CMFCSubmitLeeChansolDlg::OnInitDialog()
 	m_pDlgImage->Create(IDD_DLGIMAGE, this);
 	m_pDlgImage->ShowWindow(SW_SHOW);
 
-	m_pDlgImage->flg = false;
+	m_pDlgImage->flg = false; // 외곽원 그리기 위한 변수
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -171,13 +171,12 @@ HCURSOR CMFCSubmitLeeChansolDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-// 기본 원 그리기
+// Circle BTN : 기본 원 그리기
 void CMFCSubmitLeeChansolDlg::OnBnClickedBtnDraw()
 {
 	// 반지름 길이 받아오기
 	int radius = GetDlgItemInt(IDC_RADIUS);
-	//m_pDlgImage->radius = radius;
-	nRadius = radius;
+	nRadius = radius; // 십자에서 사용됨
 
 	unsigned char* fm = (unsigned char*)m_pDlgImage->m_image.GetBits();
 	int nWidth = m_pDlgImage->m_image.GetWidth();
@@ -193,11 +192,8 @@ void CMFCSubmitLeeChansolDlg::OnBnClickedBtnDraw()
 	m_pDlgImage->m_pos[0].x = x;
 	m_pDlgImage->m_pos[0].y = y;
 
-	m_pos[0].x = x;
-	m_pos[0].y = y;
-
 	//원 그리기
-	drawCircle(fm, x, y, radius, COLOR_YELLOW);
+	drawCircle(fm, x, y, radius);
 
 	m_pDlgImage->Invalidate();
 }
@@ -210,8 +206,8 @@ void CMFCSubmitLeeChansolDlg::OnDestroy()
 	if(m_pDlgImage)	delete m_pDlgImage;
 }
 
-//좌표 받아서 기본 원 그리기
-void CMFCSubmitLeeChansolDlg::drawCircle(unsigned char* fm, int x, int y, int nRadius, COLORREF color)
+// 좌표 받아서 기본 원 그리기
+void CMFCSubmitLeeChansolDlg::drawCircle(unsigned char* fm, int x, int y, int nRadius)
 {
 	int nCenterX = x + nRadius;
 	int nCenterY = y + nRadius;
@@ -220,12 +216,12 @@ void CMFCSubmitLeeChansolDlg::drawCircle(unsigned char* fm, int x, int y, int nR
 	for (int j = y; j < y + nRadius * 2 + 1 ; j++) {
 		for (int i = x; i < x + nRadius * 2 + 1 ; i++) {
 			if (isCircle(i, j, nCenterX, nCenterY, nRadius))
-				fm[j * nPitch + i] = COLOR_BLACK;
+				fm[j * nPitch + i] = 0;
 		}
 	}
 }
 
-//원 내부 판별
+// 원 내부 판별
 bool CMFCSubmitLeeChansolDlg::isCircle(int i, int j, int nCenterX, int nCenterY, int nRadius)
 {
 	bool flg = false;
@@ -240,7 +236,7 @@ bool CMFCSubmitLeeChansolDlg::isCircle(int i, int j, int nCenterX, int nCenterY,
 	return flg;
 }
 
-//중심에 십자 그리기
+// Center BTN : 중심에 십자 그리기
 void CMFCSubmitLeeChansolDlg::OnBnClickedBtnCenter()
 {
 	int len = nRadius/5; // 십자 길이
@@ -248,11 +244,10 @@ void CMFCSubmitLeeChansolDlg::OnBnClickedBtnCenter()
 	int nPitch = m_pDlgImage->m_image.GetPitch();
 	CPoint pt = findCenter();
 
-	cout << pt.x << "," << pt.y << endl;
-	for (int j = pt.y - len; j < pt.y + len+1; j++) {
+	for (int j = pt.y - len; j < pt.y + len+1; j++) { //세로
 		fm[j * nPitch + pt.x] = 0xff;
 	}
-	for (int i = pt.x - len; i < pt.x + len+1; i++) {
+	for (int i = pt.x - len; i < pt.x + len+1; i++) { //가로
 		fm[pt.y * nPitch + i] = 0xff;
 	}
 	m_pDlgImage->Invalidate();
@@ -297,7 +292,7 @@ CPoint CMFCSubmitLeeChansolDlg::findCenter()
 	double centerX = (double)sumX / cnt;
 	double centerY = (double)sumY / cnt;
 
-	m_pDlgImage->circle_size = (((x_max - x_min) / 2) + ((y_max - y_min) / 2)) / 2; // 반지름 계산
+	m_pDlgImage->circle_size = ((double(x_max - x_min) / 2) + (double(y_max - y_min) / 2)) / 2; // 반지름 계산
 
 	pt.x = centerX;
 	pt.y = centerY;

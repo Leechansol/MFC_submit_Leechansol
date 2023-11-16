@@ -35,7 +35,5 @@ public:
 	afx_msg void OnPaint();
 	void drawOutCircle(CDC* pDC, COLORREF color, int thick);
 private:
-	void drawData(CDC* pDC);
-	//void drawCenter(CDC* pDC);
 	void InitImage();
 };

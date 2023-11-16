@@ -15,7 +15,6 @@ public:
 	CMFCSubmitLeeChansolDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
 	CImage m_image;
 	CDlgImage* m_pDlgImage;
-	CPoint m_pos[MAX_POINT];
 	int nRadius;
 
 // 대화 상자 데이터입니다.
@@ -40,9 +39,9 @@ protected:
 public:
 	afx_msg void OnBnClickedBtnDraw();
 	afx_msg void OnDestroy();
-	void drawCircle(unsigned char* fm, int x, int y, int nRadius, COLORREF color);
+	void drawCircle(unsigned char* fm, int x, int y, int nRadius);
 	bool isCircle(int i, int j, int nCenterX, int nCenterY, int nRadius);
 	afx_msg void OnBnClickedBtnCenter();
-	CPoint findCenter();
 	afx_msg void OnBnClickedBtnOutcircle();
+	CPoint findCenter();
 };
