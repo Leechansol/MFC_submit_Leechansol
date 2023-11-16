@@ -32,9 +32,8 @@ public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 private:
-	void drawData(CDC* pDC);
-	void drawOutCircle(CDC* pDC, COLORREF color, int thick);
-	void drawCenter(CDC* pDC);
-	void findCenter();
+	//void drawData(CDC* pDC);
+	//void drawOutCircle(CDC* pDC, COLORREF color, int thick);
+	//void drawCenter(CDC* pDC);
 	void InitImage();
 };

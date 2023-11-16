@@ -5,6 +5,8 @@
 #pragma once
 #include "DlgImage.h"
 
+#define MAX_POINT 10
+
 // CMFCSubmitLeeChansolDlg 대화 상자
 class CMFCSubmitLeeChansolDlg : public CDialogEx
 {
@@ -13,6 +15,7 @@ public:
 	CMFCSubmitLeeChansolDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
 	CImage m_image;
 	CDlgImage* m_pDlgImage;
+	CPoint m_pos[MAX_POINT];
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -39,5 +42,5 @@ public:
 	void drawCircle(unsigned char* fm, int x, int y, int nRadius);
 	bool isCircle(int i, int j, int nCenterX, int nCenterY, int nRadius);
 	afx_msg void OnBnClickedBtnCenter();
-	void findCenter();
+	CPoint findCenter();
 };

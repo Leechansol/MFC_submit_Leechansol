@@ -76,43 +76,15 @@ void CDlgImage::OnPaint()
 	if (m_image) {
 		m_image.Draw(dc, 0, 0);
 	}
-	findCenter();
-	drawData(&dc);
+	//drawData(&dc);
 }
-
+/*
 void CDlgImage::drawData(CDC* pDC)
 {
 	//drawCircle(pDC, COLOR_BLUE); // original circle
 	//drawCenter(pDC);
 	drawOutCircle(pDC, COLOR_YELLOW, 2); // out circle
 	
-}
-
-void CDlgImage::findCenter()
-{
-	int x = m_pos[0].x;
-	int y = m_pos[0].y;
-	unsigned char* fm = (unsigned char*)m_image.GetBits();
-	int nWidth = m_image.GetWidth();
-	int nHeight = m_image.GetHeight();
-	int nPitch = m_image.GetPitch();
-
-	int sumX = 0;
-	int sumY = 0;
-	int cnt = 0;
-	CRect rect(0, 0, nWidth, nHeight);
-	for (int j = rect.top; j < rect.bottom; j++) {
-		for (int i = rect.left; i < rect.right; i++) {
-			if (fm[j * nPitch + i] == 0) {
-				sumX += i;
-				sumY += j;
-				cnt++;
-			}
-		}
-	}
-	double centerX = (double)sumX / cnt;
-	double centerY = (double)sumY / cnt;
-
 }
 
 // 원그리기
@@ -142,7 +114,6 @@ void CDlgImage::drawOutCircle(CDC* pDC, COLORREF color, int thick)
 // 십자그리기
 void CDlgImage::drawCenter(CDC* pDC)
 {
-	/*
 	CPen pen;
 	pen.CreatePen(PS_SOLID, 2, COLOR_BLUE);
 	CPen* pOldPen = pDC->SelectObject(&pen);
@@ -155,5 +126,6 @@ void CDlgImage::drawCenter(CDC* pDC)
 
 	pDC->SelectObject(pOldPen);
 	pen.DeleteObject();
-	*/
+	
 }
+*/
